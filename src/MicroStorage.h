@@ -54,4 +54,12 @@ public:
         prefs.end();
         return values;
     }
+
+    template<typename... Pairs>
+    static void set(const char *ns, const Pairs&... pairs) {
+        Preferences prefs;
+        prefs.begin(ns, false);
+        (pairs.set(prefs), ...);
+        prefs.end();
+    }
 };
