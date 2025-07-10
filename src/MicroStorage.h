@@ -52,6 +52,10 @@ public:
  * @brief Abstract base class representing a typed key-value pair.
  * 
  * @tparam T Type of the value.
+ * 
+ * The `value` represents:
+ * - the default value to return if the key is not found in Preferences when calling `get()`
+ * - the value that will be written to Preferences when calling `set()`
  */
 template<typename T>
 class Entry {
