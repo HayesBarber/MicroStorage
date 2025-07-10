@@ -8,6 +8,7 @@ MicroStorage is a lightweight C++ library for ESP32 projects using the Arduino f
 - Support for `String` and `int` out of the box.
 - Batch `get()` and `set()` operations with clean tuple unpacking.
 - Customizable via templated base class.
+- Clear one or more namespaces using `MicroStorage::clear(...)`.
 
 ## Example
 
@@ -23,6 +24,17 @@ MicroStorage::set(
     StringEntry("username", username),
     IntEntry("retryCount", retryCount + 1)
 );
+```
+
+## Clearing Namespaces
+
+You can clear one or more namespaces from preferences:
+
+```cpp
+bool success = MicroStorage::clear("namespace1", "namespace2");
+if (!success) {
+    Serial.println("Failed to clear one or more namespaces");
+}
 ```
 
 ## Entry Types
