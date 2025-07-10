@@ -1,0 +1,12 @@
+{
+  "name": "MicroStorage",
+  "version": "0.1.0",
+  "description": "Key / Value storage library",
+  "frameworks": "arduino",
+  "license": "MIT",
+  "platforms": "espressif32",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HayesBarber/MicroStorage.git"
+  }
+}
