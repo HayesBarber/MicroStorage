@@ -46,6 +46,30 @@ public:
         (pairs.set(prefs), ...);
         prefs.end();
     }
+
+    /**
+     * @brief Clears all keys stored under the given namespaces.
+     * 
+     * @param namespaces One or more null-terminated C strings representing Preferences namespaces.
+     * @return true if all namespaces were successfully cleared, false otherwise.
+     */
+    template<typename... Namespaces>
+    static bool clear(const Namespaces&... namespaces) {
+        bool allCleared = true;
+        Preferences prefs;
+        ((allCleared &= clearNamespace(prefs, namespaces)), ...);
+        return allCleared;
+    }
+
+private:
+    static bool clearNamespace(Preferences& prefs, const char* ns) {
+        if (prefs.begin(ns, false)) {
+            bool success = prefs.clear();
+            prefs.end();
+            return success;
+        }
+        return false;
+    }
 };
 
 /**
