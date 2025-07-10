@@ -3,6 +3,27 @@
 #include <Preferences.h>
 #include <tuple>
 
+class MicroStorage {
+public:
+    template<typename... Pairs>
+    static auto get(const char *ns, Pairs&&... pairs) -> std::tuple<decltype(pairs.get(std::declval<Preferences&>()))...> {
+        Preferences prefs;
+        prefs.begin(ns, true);
+        using TupleType = std::tuple<decltype(pairs.get(prefs))...>;
+        TupleType values = std::make_tuple(pairs.get(prefs)...);
+        prefs.end();
+        return values;
+    }
+
+    template<typename... Pairs>
+    static void set(const char *ns, const Pairs&... pairs) {
+        Preferences prefs;
+        prefs.begin(ns, false);
+        (pairs.set(prefs), ...);
+        prefs.end();
+    }
+};
+
 template<typename T>
 class Entry {
 protected:
@@ -40,26 +61,5 @@ public:
 
     void set(Preferences& prefs) const override {
         prefs.putInt(key, value);
-    }
-};
-
-class MicroStorage {
-public:
-    template<typename... Pairs>
-    static auto get(const char *ns, Pairs&&... pairs) -> std::tuple<decltype(pairs.get(std::declval<Preferences&>()))...> {
-        Preferences prefs;
-        prefs.begin(ns, true);
-        using TupleType = std::tuple<decltype(pairs.get(prefs))...>;
-        TupleType values = std::make_tuple(pairs.get(prefs)...);
-        prefs.end();
-        return values;
-    }
-
-    template<typename... Pairs>
-    static void set(const char *ns, const Pairs&... pairs) {
-        Preferences prefs;
-        prefs.begin(ns, false);
-        (pairs.set(prefs), ...);
-        prefs.end();
     }
 };
