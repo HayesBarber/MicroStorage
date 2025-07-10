@@ -1,11 +1,27 @@
 #pragma once
+/**
+ * @file MicroStorage.h
+ * @brief A lightweight abstraction for storing and retrieving typed key-value pairs using ESP32 Preferences.
+ */
 #include <Arduino.h>
 #include <Preferences.h>
 #include <tuple>
 #include <utility>
 
+/**
+ * @class MicroStorage
+ * @brief Provides static methods to persist and retrieve multiple key-value entries using ESP32 Preferences.
+ */
 class MicroStorage {
 public:
+    /**
+     * @brief Retrieves values for the given entries from the specified namespace in Preferences.
+     * 
+     * @tparam Pairs Variadic template for Entry-derived types.
+     * @param ns The Preferences namespace.
+     * @param pairs One or more Entry instances.
+     * @return A tuple containing the values read from Preferences.
+     */
     template<typename... Pairs>
     static auto get(const char *ns, Pairs&&... pairs) -> std::tuple<decltype(pairs.get(std::declval<Preferences&>()))...> {
         Preferences prefs;
@@ -16,6 +32,13 @@ public:
         return values;
     }
 
+    /**
+     * @brief Persists the values of the given entries into the specified namespace in Preferences.
+     * 
+     * @tparam Pairs Variadic template for Entry-derived types.
+     * @param ns The Preferences namespace.
+     * @param pairs One or more Entry instances.
+     */
     template<typename... Pairs>
     static void set(const char *ns, const Pairs&... pairs) {
         Preferences prefs;
@@ -25,6 +48,15 @@ public:
     }
 };
 
+/**
+ * @brief Abstract base class representing a typed key-value pair.
+ * 
+ * @tparam T Type of the value.
+ * 
+ * The `value` represents:
+ * - the default value to return if the key is not found in Preferences when calling `get()`
+ * - the value that will be written to Preferences when calling `set()`
+ */
 template<typename T>
 class Entry {
 protected:
@@ -39,6 +71,9 @@ public:
     virtual void set(Preferences& prefs) const = 0;
 };
 
+/**
+ * @brief Represents a key-value pair where the value is a String.
+ */
 class StringEntry : public Entry<String> {
 public:
     StringEntry(const char* key, const String& value) : Entry<String>(key, value) {}
@@ -52,6 +87,9 @@ public:
     }
 };
 
+/**
+ * @brief Represents a key-value pair where the value is an int.
+ */
 class IntEntry : public Entry<int> {
 public:
     IntEntry(const char* key, int value) : Entry<int>(key, value) {}
