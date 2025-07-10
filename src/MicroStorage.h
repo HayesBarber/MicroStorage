@@ -14,6 +14,7 @@ public:
     virtual ~Entry() = default;
 
     virtual T get(Preferences& prefs) const = 0;
+    virtual void set(Preferences& prefs) const = 0;
 };
 
 class StringEntry : public Entry<String> {
@@ -23,6 +24,10 @@ public:
     String get(Preferences& prefs) const override {
         return prefs.getString(key, value);
     }
+
+    void set(Preferences& prefs) const override {
+        prefs.putString(key, value);
+    }
 };
 
 class IntEntry : public Entry<int> {
@@ -31,6 +36,10 @@ public:
 
     int get(Preferences& prefs) const override {
         return prefs.getInt(key, value);
+    }
+
+    void set(Preferences& prefs) const override {
+        prefs.putInt(key, value);
     }
 };
 
